@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>广州吃什么抽签器</title>
+
+<link rel="stylesheet" href="style.css">
+
+</head>
+
+
+<body>
+
+
+<div class="container">
+
+    <h1>
+        🍜 广州吃什么
+        <br>
+        抽签器
+    </h1>
+
+
+    <div class="subtitle">
+        今天吃什么？交给运气决定
+    </div>
+
+
+
+    <div class="time-select">
+
+        <button onclick="setMeal('早餐')">
+            🌅 早餐
+        </button>
+
+        <button onclick="setMeal('午餐')">
+            ☀️ 午餐
+        </button>
+
+        <button onclick="setMeal('晚餐')">
+            🌙 晚餐
+        </button>
+
+    </div>
+
+
+
+    <div class="wheel">
+
+        <div id="foodResult">
+            点击开始
+        </div>
+
+    </div>
+
+
+
+    <button class="draw-btn"
+    onclick="drawFood()">
+
+        🎰 开始抽签
+
+    </button>
+
+
+
+    <div class="result-card">
+
+        <h2 id="name">
+            -
+        </h2>
+
+
+        <p id="type">
+            -
+        </p>
+
+
+        <p id="desc">
+            -
+        </p>
+
+
+    </div>
+
+
+
+</div>
+
+
+
+<script src="app.js"></script>
+
+
+</body>
+
+</html>
