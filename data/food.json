@@ -1,0 +1,188 @@
+[
+  {
+    "id": 1001,
+    "restaurant": "广州酒家",
+    "dish": "虾饺",
+    "meal": ["早餐"],
+    "district": "荔湾",
+    "category": "广式早茶",
+    "price": "¥80",
+    "couple": true,
+    "spicy": false,
+    "reason": "广州老字号，适合情侣一起体验传统早茶。"
+  },
+  {
+    "id": 1002,
+    "restaurant": "陶陶居",
+    "dish": "红米肠",
+    "meal": ["早餐"],
+    "district": "越秀",
+    "category": "广式早茶",
+    "price": "¥70",
+    "couple": true,
+    "spicy": false,
+    "reason": "环境舒适，适合周末慢慢吃早茶。"
+  },
+  {
+    "id": 1003,
+    "restaurant": "银记肠粉",
+    "dish": "鲜虾肠粉",
+    "meal": ["早餐"],
+    "district": "天河",
+    "category": "肠粉",
+    "price": "¥30",
+    "couple": false,
+    "spicy": false,
+    "reason": "广州经典早餐，方便快捷。"
+  },
+  {
+    "id": 1004,
+    "restaurant": "同记鸡粥粉面",
+    "dish": "云吞面",
+    "meal": ["早餐"],
+    "district": "荔湾",
+    "category": "粉面",
+    "price": "¥35",
+    "couple": false,
+    "spicy": false,
+    "reason": "传统广州街坊早餐选择。"
+  },
+
+
+  {
+    "id": 2001,
+    "restaurant": "炳胜品味",
+    "dish": "招牌烧鹅",
+    "meal": ["午餐", "晚餐"],
+    "district": "海珠",
+    "category": "粤菜",
+    "price": "¥150",
+    "couple": true,
+    "spicy": false,
+    "reason": "适合情侣约会，粤菜品质稳定。"
+  },
+  {
+    "id": 2002,
+    "restaurant": "惠食佳",
+    "dish": "啫啫煲",
+    "meal": ["午餐", "晚餐"],
+    "district": "海珠",
+    "category": "粤菜",
+    "price": "¥120",
+    "couple": true,
+    "spicy": false,
+    "reason": "广州特色菜，适合两个人分享。"
+  },
+  {
+    "id": 2003,
+    "restaurant": "点都德",
+    "dish": "烧卖",
+    "meal": ["早餐", "午餐"],
+    "district": "天河",
+    "category": "广式点心",
+    "price": "¥60",
+    "couple": true,
+    "spicy": false,
+    "reason": "性价比高，适合轻松约饭。"
+  },
+  {
+    "id": 2004,
+    "restaurant": "顺德公",
+    "dish": "顺德鱼生",
+    "meal": ["午餐", "晚餐"],
+    "district": "番禺",
+    "category": "顺德菜",
+    "price": "¥180",
+    "couple": true,
+    "spicy": false,
+    "reason": "适合情侣体验顺德特色美食。"
+  },
+
+
+  {
+    "id": 3001,
+    "restaurant": "八合里牛肉火锅",
+    "dish": "潮汕牛肉火锅",
+    "meal": ["晚餐"],
+    "district": "天河",
+    "category": "火锅",
+    "price": "¥150",
+    "couple": true,
+    "spicy": false,
+    "reason": "适合情侣晚餐，边吃边聊天。"
+  },
+  {
+    "id": 3002,
+    "restaurant": "探鱼",
+    "dish": "烤鱼",
+    "meal": ["晚餐"],
+    "district": "天河",
+    "category": "川味",
+    "price": "¥120",
+    "couple": true,
+    "spicy": true,
+    "reason": "适合喜欢重口味的情侣。"
+  },
+  {
+    "id": 3003,
+    "restaurant": "太二酸菜鱼",
+    "dish": "酸菜鱼",
+    "meal": ["晚餐"],
+    "district": "越秀",
+    "category": "川菜",
+    "price": "¥130",
+    "couple": true,
+    "spicy": true,
+    "reason": "年轻情侣常见约会选择。"
+  },
+  {
+    "id": 3004,
+    "restaurant": "陶陶居",
+    "dish": "白切鸡",
+    "meal": ["晚餐"],
+    "district": "越秀",
+    "category": "粤菜",
+    "price": "¥160",
+    "couple": true,
+    "spicy": false,
+    "reason": "传统粤菜，适合正式约会。"
+  },
+
+
+  {
+    "id": 4001,
+    "restaurant": "澳门街",
+    "dish": "葡式蛋挞",
+    "meal": ["早餐"],
+    "district": "天河",
+    "category": "港澳美食",
+    "price": "¥40",
+    "couple": true,
+    "spicy": false,
+    "reason": "适合休闲早餐。"
+  },
+  {
+    "id": 4002,
+    "restaurant": "萨莉亚",
+    "dish": "意大利面",
+    "meal": ["午餐", "晚餐"],
+    "district": "天河",
+    "category": "西餐",
+    "price": "¥60",
+    "couple": true,
+    "spicy": false,
+    "reason": "预算友好，适合轻松约会。"
+  },
+  {
+    "id": 4003,
+    "restaurant": "寿司郎",
+    "dish": "寿司",
+    "meal": ["午餐", "晚餐"],
+    "district": "天河",
+    "category": "日料",
+    "price": "¥150",
+    "couple": true,
+    "spicy": false,
+    "reason": "适合喜欢日料的情侣。"
+  }
+]

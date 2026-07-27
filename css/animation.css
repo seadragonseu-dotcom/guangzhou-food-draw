@@ -1,0 +1,633 @@
+/* =====================================================
+   Guangzhou Food Draw V2.0
+   Animation Style
+===================================================== */
+
+
+
+/* =====================================================
+   转盘旋转
+===================================================== */
+
+
+.wheel.spinning {
+
+
+    animation:
+
+        wheelRotate
+
+        1s
+
+        linear
+
+        infinite;
+
+
+}
+
+
+
+@keyframes wheelRotate {
+
+
+    from {
+
+
+        transform:
+
+            rotate(0deg);
+
+
+    }
+
+
+    to {
+
+
+        transform:
+
+            rotate(360deg);
+
+
+    }
+
+
+}
+
+
+
+
+
+/* =====================================================
+   抽签结束减速效果
+===================================================== */
+
+
+.wheel.stop-spin {
+
+
+    animation:
+
+        wheelStop
+
+        1.5s
+
+        ease-out;
+
+
+}
+
+
+
+@keyframes wheelStop {
+
+
+    0% {
+
+
+        transform:
+
+            rotate(720deg);
+
+
+    }
+
+
+    100% {
+
+
+        transform:
+
+            rotate(0deg);
+
+
+    }
+
+
+}
+
+
+
+
+
+/* =====================================================
+   中心文字闪烁
+===================================================== */
+
+
+.wheel-center.active {
+
+
+    animation:
+
+        centerPulse
+
+        0.8s
+
+        infinite;
+
+
+}
+
+
+
+@keyframes centerPulse {
+
+
+    0% {
+
+
+        transform:
+
+            scale(1);
+
+
+        opacity:
+
+            1;
+
+
+    }
+
+
+
+    50% {
+
+
+        transform:
+
+            scale(1.15);
+
+
+        opacity:
+
+            0.7;
+
+
+    }
+
+
+
+    100% {
+
+
+        transform:
+
+            scale(1);
+
+
+        opacity:
+
+            1;
+
+
+    }
+
+
+}
+
+
+
+
+
+/* =====================================================
+   开始抽签按钮
+===================================================== */
+
+
+.draw-button {
+
+
+    transition:
+
+        transform
+
+        0.2s
+
+        ease;
+
+
+}
+
+
+
+.draw-button:active {
+
+
+    transform:
+
+        scale(0.92);
+
+
+}
+
+
+
+
+
+/* =====================================================
+   情侣模式呼吸动画
+===================================================== */
+
+
+.mode-button {
+
+
+    animation:
+
+        loveBreath
+
+        2s
+
+        ease-in-out
+
+        infinite;
+
+
+}
+
+
+
+@keyframes loveBreath {
+
+
+    0% {
+
+
+        box-shadow:
+
+        0 8px 20px
+
+        rgba(232,67,147,0.25);
+
+
+    }
+
+
+
+    50% {
+
+
+        box-shadow:
+
+        0 12px 35px
+
+        rgba(232,67,147,0.45);
+
+
+    }
+
+
+
+    100% {
+
+
+        box-shadow:
+
+        0 8px 20px
+
+        rgba(232,67,147,0.25);
+
+
+    }
+
+
+}
+
+
+
+
+
+/* =====================================================
+   推荐结果出现动画
+===================================================== */
+
+
+.result-card.show {
+
+
+    animation:
+
+        resultShow
+
+        0.6s
+
+        ease;
+
+
+}
+
+
+
+@keyframes resultShow {
+
+
+    from {
+
+
+        opacity:
+
+            0;
+
+
+        transform:
+
+            translateY(40px);
+
+
+    }
+
+
+
+    to {
+
+
+        opacity:
+
+            1;
+
+
+        transform:
+
+            translateY(0);
+
+
+    }
+
+
+}
+
+
+
+
+
+/* =====================================================
+   美食名称强调
+===================================================== */
+
+
+.food-highlight {
+
+
+    animation:
+
+        foodBounce
+
+        0.8s
+
+        ease;
+
+
+}
+
+
+
+@keyframes foodBounce {
+
+
+    0% {
+
+
+        transform:
+
+            scale(0.8);
+
+
+    }
+
+
+
+    50% {
+
+
+        transform:
+
+            scale(1.15);
+
+
+    }
+
+
+
+    100% {
+
+
+        transform:
+
+            scale(1);
+
+
+    }
+
+
+}
+
+
+
+
+
+/* =====================================================
+   标签出现
+===================================================== */
+
+
+.tags span {
+
+
+    animation:
+
+        tagFade
+
+        0.5s
+
+        ease;
+
+
+}
+
+
+
+@keyframes tagFade {
+
+
+    from {
+
+
+        opacity:
+
+            0;
+
+
+        transform:
+
+            translateY(10px);
+
+
+    }
+
+
+
+    to {
+
+
+        opacity:
+
+            1;
+
+
+        transform:
+
+            translateY(0);
+
+
+    }
+
+
+}
+
+
+
+
+
+/* =====================================================
+   页面加载动画
+===================================================== */
+
+
+.app {
+
+
+    animation:
+
+        pageEnter
+
+        0.6s
+
+        ease;
+
+
+}
+
+
+
+@keyframes pageEnter {
+
+
+    from {
+
+
+        opacity:
+
+            0;
+
+
+    }
+
+
+
+    to {
+
+
+        opacity:
+
+            1;
+
+
+    }
+
+
+}
+
+
+
+
+
+/* =====================================================
+   收藏按钮点击
+===================================================== */
+
+
+.favorite-active {
+
+
+    animation:
+
+        heartBeat
+
+        0.5s
+
+        ease;
+
+
+}
+
+
+
+@keyframes heartBeat {
+
+
+    0% {
+
+
+        transform:
+
+            scale(1);
+
+
+    }
+
+
+    30% {
+
+
+        transform:
+
+            scale(1.3);
+
+
+    }
+
+
+    100% {
+
+
+        transform:
+
+            scale(1);
+
+
+    }
+
+
+}
+
+
+
+
+
+/* =====================================================
+   手机端减少动画负担
+===================================================== */
+
+
+@media(prefers-reduced-motion: reduce){
+
+
+    * {
+
+
+        animation-duration:
+
+        0.01ms !important;
+
+
+        animation-iteration-count:
+
+        1 !important;
+
+
+    }
+
+
+}
