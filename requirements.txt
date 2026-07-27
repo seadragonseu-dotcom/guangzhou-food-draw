@@ -1,0 +1,10 @@
+# Guangzhou Food Draw V2.0
+# Python 3.12
+
+
+# Excel数据处理
+pandas>=2.2.0
+
+
+# Excel文件读写
+openpyxl>=3.1.0
