@@ -1,23 +1,26 @@
-/* =====================================================
-   Guangzhou Food Draw V2.0
+/*
+=====================================================
 
-   Draw Engine V2.1
+Guangzhou Food Draw V2.0
 
-   功能：
-   1. 加载静态数据库
-   2. 数据关联
-   3. 餐次筛选
-   4. 随机推荐
-   5. 情侣模式支持
-   6. 转盘动画控制
+Smart Draw Engine V3.1 Stable
 
-===================================================== */
+功能：
+1. 数据加载
+2. 数据关联
+3. 智能筛选
+4. 推荐评分
+5. 随机抽签
+6. 情侣模式
+7. 推荐结果展示
+
+=====================================================
+*/
 
 
-
-// ==============================
-// 数据缓存
-// ==============================
+// =====================================================
+// 数据
+// =====================================================
 
 
 let foodRelations = [];
@@ -26,29 +29,39 @@ let restaurants = [];
 
 let dishes = [];
 
-let tags = [];
 
-
-
-// ==============================
-// 状态
-// ==============================
-
+// 当前餐次
 
 let currentMeal = "早餐";
 
+
+// 最后结果
+
 let lastResult = null;
+
+
+// 动画状态
 
 let isDrawing = false;
 
 
+// 数据加载状态
+
+let databaseReady = false;
+
+
+// 当前动画结果
+
+let drawingResult = null;
 
 
 
 
-// ==============================
+
+
+// =====================================================
 // 加载数据库
-// ==============================
+// =====================================================
 
 
 async function loadFoodDatabase(){
@@ -63,9 +76,7 @@ async function loadFoodDatabase(){
 
             restaurantData,
 
-            dishData,
-
-            tagData
+            dishData
 
 
         ] = await Promise.all([
@@ -73,28 +84,26 @@ async function loadFoodDatabase(){
 
             fetch(
                 "data/food.json"
-            ).then(
+            )
+            .then(
                 r=>r.json()
             ),
+
 
 
             fetch(
                 "data/restaurants.json"
-            ).then(
+            )
+            .then(
                 r=>r.json()
             ),
+
 
 
             fetch(
                 "data/dishes.json"
-            ).then(
-                r=>r.json()
-            ),
-
-
-            fetch(
-                "data/tags.json"
-            ).then(
+            )
+            .then(
                 r=>r.json()
             )
 
@@ -103,40 +112,49 @@ async function loadFoodDatabase(){
 
 
 
-        foodRelations = foodData;
+        foodRelations =
+            foodData;
 
-        restaurants = restaurantData;
 
-        dishes = dishData;
+        restaurants =
+            restaurantData;
 
-        tags = tagData;
+
+        dishes =
+            dishData;
+
+
+
+        databaseReady = true;
 
 
 
         console.log(
-            "Database loaded:",
-            {
-                food:
-                    foodRelations.length,
+            "Smart database loaded"
+        );
 
-                restaurants:
-                    restaurants.length,
-
-                dishes:
-                    dishes.length
-            }
+        console.log(
+            "Food:",
+            foodRelations.length
         );
 
 
     }
 
+
     catch(error){
 
 
         console.error(
+
             "Database load failed:",
+
             error
+
         );
+
+
+        databaseReady = false;
 
 
     }
@@ -150,9 +168,28 @@ async function loadFoodDatabase(){
 
 
 
-// ==============================
-// 数据关联
-// ==============================
+// =====================================================
+// 餐次设置
+// =====================================================
+
+
+function setMealType(meal){
+
+
+    currentMeal = meal;
+
+
+}
+
+
+
+
+
+
+
+// =====================================================
+// 数据合并
+// =====================================================
 
 
 function buildFoodList(){
@@ -196,86 +233,70 @@ function buildFoodList(){
 
 
 
-
         return {
 
 
             id:item.id,
 
 
+            restaurant_id:
+                restaurant.id,
+
+
             restaurant:
-
-
                 restaurant.name,
 
 
             dish:
-
-
                 dish.name,
 
 
-
             meal:
-
-
                 dish.meal,
 
 
-
             district:
-
-
                 restaurant.district,
 
 
-
-            area:
-
-
-                restaurant.area,
-
-
-
             category:
-
-
                 restaurant.category,
 
 
-
             price:
-
-
                 restaurant.price,
 
 
-
             rating:
-
-
                 restaurant.rating,
 
 
-
             couple_score:
-
-
-                restaurant.couple_score,
-
+                restaurant.couple_score || 0,
 
 
             tags:
-
-
-                item.tags,
-
+                item.tags || [],
 
 
             reason:
+                item.reason || "推荐美食",
 
 
-                item.reason
+            business_hours:
+                restaurant.business_hours,
+
+
+            latitude:
+                restaurant.latitude,
+
+
+            longitude:
+                restaurant.longitude,
+
+
+            address:
+                restaurant.address
 
 
         };
@@ -285,7 +306,7 @@ function buildFoodList(){
 
     .filter(
 
-        item=>item!==null
+        item=>item
 
     );
 
@@ -298,15 +319,160 @@ function buildFoodList(){
 
 
 
-// ==============================
-// 设置餐次
-// ==============================
+
+// =====================================================
+// 推荐评分
+// =====================================================
 
 
-function setMealType(meal){
+function calculateScore(food){
 
 
-    currentMeal = meal;
+    let score = 0;
+
+
+
+    // 评分 30%
+
+    score +=
+
+        (
+            food.rating / 5
+        )
+
+        *
+
+        30;
+
+
+
+
+
+    // 情侣指数 30%
+
+    if(food.couple_score){
+
+
+        score +=
+
+            (
+                food.couple_score / 5
+            )
+
+            *
+
+            30;
+
+
+    }
+
+
+
+
+
+
+    const preference =
+
+        getPreference
+
+        ?
+
+        getPreference()
+
+        :
+
+        {};
+
+
+
+
+
+    // 预算 20%
+
+    if(
+        preference.maxPrice
+    ){
+
+
+        if(
+            food.price <=
+            preference.maxPrice
+        ){
+
+            score +=20;
+
+        }
+
+
+    }
+
+    else{
+
+
+        score +=10;
+
+
+    }
+
+
+
+
+
+
+    // 标签 20%
+
+    if(
+
+        preference.tags
+
+        &&
+
+        preference.tags.length
+
+        &&
+
+        food.tags.length
+
+    ){
+
+
+        const match =
+
+            food.tags.filter(
+
+                t=>
+
+                preference.tags.includes(t)
+
+            );
+
+
+
+        score +=
+
+            (
+                match.length /
+                preference.tags.length
+            )
+
+            *
+
+            20;
+
+
+    }
+
+    else{
+
+
+        score +=10;
+
+
+    }
+
+
+
+    return score;
 
 
 }
@@ -317,30 +483,29 @@ function setMealType(meal){
 
 
 
-
-// ==============================
-// 获取推荐池
-// ==============================
-
-
-function getAvailableFoods(){
+// =====================================================
+// 获取智能推荐池
+// =====================================================
 
 
+function getSmartPool(){
 
-    let list =
 
+    let foods =
 
         buildFoodList();
 
 
 
-    list =
+    // 餐次过滤
 
-        list.filter(
+    foods =
 
-            item =>
+        foods.filter(
 
-            item.meal.includes(
+            food=>
+
+            food.meal.includes(
                 currentMeal
             )
 
@@ -348,7 +513,115 @@ function getAvailableFoods(){
 
 
 
-    return list;
+
+
+
+    const preference =
+
+        getPreference
+
+        ?
+
+        getPreference()
+
+        :
+
+        {};
+
+
+
+
+
+
+
+    // 情侣模式
+
+    if(
+
+        preference.coupleMode
+
+    ){
+
+
+        foods =
+
+            foods.filter(
+
+                food=>
+
+                food.couple_score >=4
+
+            );
+
+
+    }
+
+
+
+
+
+
+    // 区域
+
+    if(
+
+        preference.district
+
+    ){
+
+
+        foods =
+
+            foods.filter(
+
+                food=>
+
+                food.district ===
+                preference.district
+
+            );
+
+
+    }
+
+
+
+
+
+
+    // 评分
+
+    foods.forEach(
+
+        food=>{
+
+
+            food.score =
+
+                calculateScore(food);
+
+
+        }
+
+    );
+
+
+
+
+
+    // 排序
+
+    foods.sort(
+
+        (a,b)=>
+
+        b.score-a.score
+
+    );
+
+
+
+    return foods;
 
 
 }
@@ -359,23 +632,24 @@ function getAvailableFoods(){
 
 
 
-// ==============================
-// 随机推荐
-// ==============================
+// =====================================================
+// 智能随机
+// =====================================================
 
 
 function randomFood(){
 
 
+    const pool =
 
-    let foods =
-
-        getAvailableFoods();
+        getSmartPool();
 
 
 
     if(
-        foods.length===0
+
+        pool.length===0
+
     ){
 
         return null;
@@ -384,51 +658,26 @@ function randomFood(){
 
 
 
-    // 情侣模式
 
-    if(
-        typeof isCoupleMode ===
-        "function"
+    const top =
 
-        &&
+        pool.slice(
 
-        isCoupleMode()
+            0,
 
-    ){
+            Math.min(
 
+                10,
 
-        const coupleFoods =
+                pool.length
 
-            foods.filter(
+            )
 
-                item=>
-
-                item.couple_score>=4
-
-            );
-
-
-
-        if(
-            coupleFoods.length>0
-        ){
-
-            foods = coupleFoods;
-
-        }
-
-
-    }
-
-
-
+        );
 
 
 
     let result;
-
-
-    let count=0;
 
 
 
@@ -437,7 +686,7 @@ function randomFood(){
 
         result =
 
-            foods[
+            top[
 
                 Math.floor(
 
@@ -445,20 +694,17 @@ function randomFood(){
 
                     *
 
-                    foods.length
+                    top.length
 
                 )
 
             ];
 
 
-        count++;
-
 
     }
 
     while(
-
 
         lastResult
 
@@ -466,16 +712,7 @@ function randomFood(){
 
         result.id === lastResult.id
 
-        &&
-
-        count < 10
-
-
     );
-
-
-
-    lastResult = result;
 
 
 
@@ -491,13 +728,12 @@ function randomFood(){
 
 
 
-// ==============================
+// =====================================================
 // 开始抽签
-// ==============================
+// =====================================================
 
 
 function startDraw(){
-
 
 
     if(isDrawing){
@@ -508,7 +744,49 @@ function startDraw(){
 
 
 
-    isDrawing=true;
+    if(!databaseReady){
+
+
+        alert(
+
+            "美食数据库正在加载，请稍后"
+
+        );
+
+
+        return;
+
+
+    }
+
+
+
+
+    drawingResult =
+
+        randomFood();
+
+
+
+    if(!drawingResult){
+
+
+        alert(
+
+            "暂无符合条件的美食"
+
+        );
+
+
+        return;
+
+
+    }
+
+
+
+
+    isDrawing = true;
 
 
 
@@ -519,7 +797,6 @@ function startDraw(){
         );
 
 
-
     const text =
 
         document.getElementById(
@@ -528,29 +805,18 @@ function startDraw(){
 
 
 
-    const button =
-
-        document.getElementById(
-            "drawButton"
-        );
-
-
-
     if(wheel){
 
+
         wheel.classList.add(
+
             "spinning"
+
         );
 
-    }
-
-
-
-    if(button){
-
-        button.disabled=true;
 
     }
+
 
 
 
@@ -559,13 +825,21 @@ function startDraw(){
         setInterval(()=>{
 
 
-            let temp =
+            const temp =
 
                 randomFood();
 
 
 
-            if(temp && text){
+            if(
+
+                temp
+
+                &&
+
+                text
+
+            ){
 
 
                 text.innerHTML =
@@ -576,8 +850,8 @@ function startDraw(){
             }
 
 
-
         },100);
+
 
 
 
@@ -605,9 +879,9 @@ function startDraw(){
 
 
 
-// ==============================
+// =====================================================
 // 完成抽签
-// ==============================
+// =====================================================
 
 
 function finishDraw(){
@@ -616,7 +890,25 @@ function finishDraw(){
 
     const result =
 
-        randomFood();
+        drawingResult;
+
+
+
+    if(result){
+
+
+        lastResult = result;
+
+
+        updateResult(
+
+            result
+
+        );
+
+
+    }
+
 
 
 
@@ -633,12 +925,16 @@ function finishDraw(){
 
 
         wheel.classList.remove(
+
             "spinning"
+
         );
 
 
         wheel.classList.add(
+
             "stop-spin"
+
         );
 
 
@@ -646,44 +942,10 @@ function finishDraw(){
 
 
 
-    updateResult(result);
 
 
+    isDrawing = false;
 
-
-    setTimeout(()=>{
-
-
-        if(wheel){
-
-            wheel.classList.remove(
-                "stop-spin"
-            );
-
-        }
-
-
-    },1500);
-
-
-
-
-    const button =
-
-        document.getElementById(
-            "drawButton"
-        );
-
-
-    if(button){
-
-        button.disabled=false;
-
-    }
-
-
-
-    isDrawing=false;
 
 
 }
@@ -694,162 +956,143 @@ function finishDraw(){
 
 
 
-// ==============================
-// 更新页面结果
-// ==============================
+// =====================================================
+// 更新页面
+// =====================================================
 
 
 function updateResult(food){
 
 
-
-    if(!food){
-
-        return;
-
-    }
+    const map = {
 
 
-
-
-    const name =
-
-        document.getElementById(
-            "foodName"
-        );
-
-
-
-    const type =
-
-        document.getElementById(
-            "foodType"
-        );
-
-
-
-    const district =
-
-        document.getElementById(
-            "foodDistrict"
-        );
-
-
-
-    const price =
-
-        document.getElementById(
-            "foodPrice"
-        );
-
-
-
-    const desc =
-
-        document.getElementById(
-            "foodDescription"
-        );
-
-
-
-
-
-    if(name){
-
-        name.innerHTML =
-
+        foodName:
             food.restaurant
-
             +
-
-            " · "
-
+            "<br>"
             +
-
-            food.dish;
-
-    }
+            food.dish,
 
 
+        foodType:
+            food.category,
 
 
-    if(type){
-
-        type.innerHTML =
-
-            food.category;
-
-    }
+        foodDistrict:
+            food.district,
 
 
+        foodPrice:
+            "¥"+food.price,
 
 
-    if(district){
-
-        district.innerHTML =
-
-            food.district;
-
-    }
+        foodRating:
+            food.rating,
 
 
-
-
-    if(price){
-
-        price.innerHTML =
-
-            "¥"
-
+        foodCoupleScore:
+            food.couple_score
             +
-
-            food.price;
-
-    }
+            "/5",
 
 
+        foodHours:
+            food.business_hours
+            ||
+            "-",
 
 
-    if(desc){
+        foodDescription:
+            food.reason
 
-        desc.innerHTML =
 
-            food.reason;
-
-    }
+    };
 
 
 
-    const card =
 
-        document.querySelector(
-            ".result-card"
+
+    Object.keys(map).forEach(id=>{
+
+
+        const element =
+
+            document.getElementById(id);
+
+
+
+        if(element){
+
+
+            element.innerHTML =
+
+                map[id];
+
+
+        }
+
+
+    });
+
+
+
+
+
+
+
+    const mapButton =
+
+        document.getElementById(
+            "mapButton"
         );
 
 
 
-    if(card){
+    if(mapButton){
 
 
-        card.classList.remove(
-            "show"
-        );
+        mapButton.onclick = ()=>{
 
 
+            if(
 
-        setTimeout(()=>{
+                food.latitude
+
+                &&
+
+                food.longitude
+
+            ){
 
 
-            card.classList.add(
-                "show"
-            );
+                window.open(
+
+                    "https://www.google.com/maps?q="
+
+                    +
+
+                    food.latitude
+
+                    +
+
+                    ","
+
+                    +
+
+                    food.longitude
 
 
-        },50);
+                );
+
+
+            }
+
+
+        };
 
 
     }
-
 
 
 }
@@ -860,9 +1103,9 @@ function updateResult(food){
 
 
 
-// ==============================
-// 初始化
-// ==============================
+// =====================================================
+// 页面启动
+// =====================================================
 
 
 document.addEventListener(
@@ -878,3 +1121,21 @@ document.addEventListener(
     }
 
 );
+
+
+
+
+
+
+// =====================================================
+// 提供接口
+// =====================================================
+
+
+function getLastResult(){
+
+
+    return lastResult;
+
+
+}
