@@ -1,39 +1,53 @@
 /* =====================================================
    Guangzhou Food Draw V2.0
-   Draw Engine
+
+   Draw Engine V2.1
 
    功能：
-   1. 加载美食数据
-   2. 按餐次筛选
-   3. 随机抽签
-   4. 控制转盘动画
-   5. 输出结果
+   1. 加载静态数据库
+   2. 数据关联
+   3. 餐次筛选
+   4. 随机推荐
+   5. 情侣模式支持
+   6. 转盘动画控制
 
 ===================================================== */
 
 
 
 // ==============================
-// 全局变量
+// 数据缓存
 // ==============================
 
 
-let foodDatabase = [];
+let foodRelations = [];
+
+let restaurants = [];
+
+let dishes = [];
+
+let tags = [];
+
+
+
+// ==============================
+// 状态
+// ==============================
 
 
 let currentMeal = "早餐";
 
-
 let lastResult = null;
-
 
 let isDrawing = false;
 
 
 
 
+
+
 // ==============================
-// 加载美食数据库
+// 加载数据库
 // ==============================
 
 
@@ -43,19 +57,74 @@ async function loadFoodDatabase(){
     try{
 
 
-        const response = await fetch(
-            "data/food.json"
-        );
+        const [
+
+            foodData,
+
+            restaurantData,
+
+            dishData,
+
+            tagData
 
 
-        foodDatabase =
-            await response.json();
+        ] = await Promise.all([
+
+
+            fetch(
+                "data/food.json"
+            ).then(
+                r=>r.json()
+            ),
+
+
+            fetch(
+                "data/restaurants.json"
+            ).then(
+                r=>r.json()
+            ),
+
+
+            fetch(
+                "data/dishes.json"
+            ).then(
+                r=>r.json()
+            ),
+
+
+            fetch(
+                "data/tags.json"
+            ).then(
+                r=>r.json()
+            )
+
+
+        ]);
+
+
+
+        foodRelations = foodData;
+
+        restaurants = restaurantData;
+
+        dishes = dishData;
+
+        tags = tagData;
 
 
 
         console.log(
-            "Food database loaded:",
-            foodDatabase.length
+            "Database loaded:",
+            {
+                food:
+                    foodRelations.length,
+
+                restaurants:
+                    restaurants.length,
+
+                dishes:
+                    dishes.length
+            }
         );
 
 
@@ -65,7 +134,7 @@ async function loadFoodDatabase(){
 
 
         console.error(
-            "Food database loading failed:",
+            "Database load failed:",
             error
         );
 
@@ -80,8 +149,157 @@ async function loadFoodDatabase(){
 
 
 
+
 // ==============================
-// 设置当前餐次
+// 数据关联
+// ==============================
+
+
+function buildFoodList(){
+
+
+    return foodRelations.map(item=>{
+
+
+        const restaurant =
+
+            restaurants.find(
+
+                r=>
+
+                r.id === item.restaurant_id
+
+            );
+
+
+
+        const dish =
+
+            dishes.find(
+
+                d=>
+
+                d.id === item.dish_id
+
+            );
+
+
+
+        if(
+            !restaurant ||
+            !dish
+        ){
+
+            return null;
+
+        }
+
+
+
+
+        return {
+
+
+            id:item.id,
+
+
+            restaurant:
+
+
+                restaurant.name,
+
+
+            dish:
+
+
+                dish.name,
+
+
+
+            meal:
+
+
+                dish.meal,
+
+
+
+            district:
+
+
+                restaurant.district,
+
+
+
+            area:
+
+
+                restaurant.area,
+
+
+
+            category:
+
+
+                restaurant.category,
+
+
+
+            price:
+
+
+                restaurant.price,
+
+
+
+            rating:
+
+
+                restaurant.rating,
+
+
+
+            couple_score:
+
+
+                restaurant.couple_score,
+
+
+
+            tags:
+
+
+                item.tags,
+
+
+
+            reason:
+
+
+                item.reason
+
+
+        };
+
+
+    })
+
+    .filter(
+
+        item=>item!==null
+
+    );
+
+
+}
+
+
+
+
+
+
+
+// ==============================
+// 设置餐次
 // ==============================
 
 
@@ -99,35 +317,34 @@ function setMealType(meal){
 
 
 
+
 // ==============================
-// 获取候选美食
+// 获取推荐池
 // ==============================
 
 
 function getAvailableFoods(){
 
 
+
     let list =
 
-        foodDatabase.filter(
+
+        buildFoodList();
+
+
+
+    list =
+
+        list.filter(
 
             item =>
 
-            item.meal.includes(currentMeal)
+            item.meal.includes(
+                currentMeal
+            )
 
         );
-
-
-
-    // 如果数据库为空
-
-    if(list.length === 0){
-
-
-        list = foodDatabase;
-
-
-    }
 
 
 
@@ -143,36 +360,75 @@ function getAvailableFoods(){
 
 
 // ==============================
-// 随机选择
+// 随机推荐
 // ==============================
 
 
 function randomFood(){
 
 
-    const foods =
+
+    let foods =
 
         getAvailableFoods();
 
 
 
     if(
-        foods.length === 0
+        foods.length===0
+    ){
+
+        return null;
+
+    }
+
+
+
+    // 情侣模式
+
+    if(
+        typeof isCoupleMode ===
+        "function"
+
+        &&
+
+        isCoupleMode()
+
     ){
 
 
-        return null;
+        const coupleFoods =
+
+            foods.filter(
+
+                item=>
+
+                item.couple_score>=4
+
+            );
+
+
+
+        if(
+            coupleFoods.length>0
+        ){
+
+            foods = coupleFoods;
+
+        }
 
 
     }
 
 
 
+
+
+
     let result;
 
 
-
-    let retry = 0;
+    let count=0;
 
 
 
@@ -182,21 +438,27 @@ function randomFood(){
         result =
 
             foods[
+
                 Math.floor(
+
                     Math.random()
+
                     *
+
                     foods.length
+
                 )
+
             ];
 
 
-
-        retry++;
+        count++;
 
 
     }
 
     while(
+
 
         lastResult
 
@@ -206,7 +468,8 @@ function randomFood(){
 
         &&
 
-        retry < 10
+        count < 10
+
 
     );
 
@@ -227,8 +490,9 @@ function randomFood(){
 
 
 
+
 // ==============================
-// 开始抽签动画
+// 开始抽签
 // ==============================
 
 
@@ -244,7 +508,7 @@ function startDraw(){
 
 
 
-    isDrawing = true;
+    isDrawing=true;
 
 
 
@@ -256,7 +520,7 @@ function startDraw(){
 
 
 
-    const wheelText =
+    const text =
 
         document.getElementById(
             "wheelText"
@@ -264,7 +528,7 @@ function startDraw(){
 
 
 
-    const drawButton =
+    const button =
 
         document.getElementById(
             "drawButton"
@@ -274,59 +538,39 @@ function startDraw(){
 
     if(wheel){
 
-
         wheel.classList.add(
             "spinning"
         );
 
+    }
+
+
+
+    if(button){
+
+        button.disabled=true;
 
     }
 
 
 
-    if(wheelText){
-
-
-        wheelText.innerHTML =
-
-            "抽签中...";
-
-
-    }
-
-
-
-    if(drawButton){
-
-
-        drawButton.disabled = true;
-
-
-    }
-
-
-
-    // 快速显示随机过程
-
-    let randomTimer =
+    let timer =
 
         setInterval(()=>{
 
 
-            const temp =
+            let temp =
 
                 randomFood();
 
 
 
-            if(temp){
+            if(temp && text){
 
 
-                wheelText.innerHTML =
+                text.innerHTML =
 
-                    temp.dish ||
-
-                    temp.name;
+                    temp.dish;
 
 
             }
@@ -340,23 +584,16 @@ function startDraw(){
 
 
 
-    // 2.5秒后停止
-
     setTimeout(()=>{
 
 
-        clearInterval(
-            randomTimer
-        );
-
+        clearInterval(timer);
 
 
         finishDraw();
 
 
-
     },2500);
-
 
 
 
@@ -376,9 +613,11 @@ function startDraw(){
 function finishDraw(){
 
 
+
     const result =
 
         randomFood();
+
 
 
 
@@ -387,23 +626,6 @@ function finishDraw(){
         document.getElementById(
             "wheel"
         );
-
-
-
-    const wheelText =
-
-        document.getElementById(
-            "wheelText"
-        );
-
-
-
-    const drawButton =
-
-        document.getElementById(
-            "drawButton"
-        );
-
 
 
 
@@ -424,38 +646,7 @@ function finishDraw(){
 
 
 
-
-    if(!result){
-
-
-        return;
-
-
-    }
-
-
-
-
-
-
-    if(wheelText){
-
-
-        wheelText.innerHTML =
-
-            result.dish ||
-
-            result.name;
-
-
-    }
-
-
-
-    // 输出结果
-
     updateResult(result);
-
 
 
 
@@ -477,18 +668,22 @@ function finishDraw(){
 
 
 
-    if(drawButton){
+    const button =
+
+        document.getElementById(
+            "drawButton"
+        );
 
 
-        drawButton.disabled = false;
+    if(button){
 
+        button.disabled=false;
 
     }
 
 
 
-    isDrawing = false;
-
+    isDrawing=false;
 
 
 }
@@ -500,11 +695,20 @@ function finishDraw(){
 
 
 // ==============================
-// 更新推荐卡片
+// 更新页面结果
 // ==============================
 
 
 function updateResult(food){
+
+
+
+    if(!food){
+
+        return;
+
+    }
+
 
 
 
@@ -552,76 +756,65 @@ function updateResult(food){
 
     if(name){
 
-
         name.innerHTML =
 
-            food.dish ||
+            food.restaurant
 
-            food.name;
+            +
 
+            " · "
 
-        name.classList.add(
-            "food-highlight"
-        );
+            +
 
+            food.dish;
 
     }
+
 
 
 
     if(type){
 
-
         type.innerHTML =
 
-            food.category ||
-
-            "广州美食";
-
+            food.category;
 
     }
+
 
 
 
     if(district){
 
-
         district.innerHTML =
 
-            food.district ||
-
-            "广州";
-
+            food.district;
 
     }
+
 
 
 
     if(price){
 
-
         price.innerHTML =
 
-            food.price ||
+            "¥"
 
-            "待定";
+            +
 
+            food.price;
 
     }
 
 
 
-    if(desc){
 
+    if(desc){
 
         desc.innerHTML =
 
-            food.reason ||
-
-            food.desc ||
-
-            "今天推荐这道美食";
-
+            food.reason;
 
     }
 
@@ -666,8 +859,9 @@ function updateResult(food){
 
 
 
+
 // ==============================
-// 页面初始化
+// 初始化
 // ==============================
 
 

@@ -1,27 +1,51 @@
 /* =====================================================
    Guangzhou Food Draw V2.0
-   Application Controller
+
+   Application Controller V2.1
 
    功能：
    1. 页面交互
    2. 餐次选择
    3. 情侣模式
-   4. 抽签按钮
-   5. 收藏功能
+   4. 收藏系统
+   5. 用户偏好保存
 
 ===================================================== */
 
 
 
 // ==============================
-// 全局状态
+// 用户状态
 // ==============================
 
 
-let coupleMode = false;
+let userPreference = {
+
+
+    coupleMode:false,
+
+
+    maxPrice:null,
+
+
+    district:null
+
+
+};
+
 
 
 let favoriteList = [];
+
+
+
+
+
+
+// 当前推荐结果
+
+let currentFood = null;
+
 
 
 
@@ -36,7 +60,13 @@ document.addEventListener(
 
     "DOMContentLoaded",
 
-    () => {
+    ()=>{
+
+
+        loadUserPreference();
+
+
+        loadFavorites();
 
 
         initMealButtons();
@@ -48,15 +78,13 @@ document.addEventListener(
         initCoupleMode();
 
 
-        initFavorite();
-
-
-        loadFavorites();
+        initFavoriteButton();
 
 
     }
 
 );
+
 
 
 
@@ -69,7 +97,6 @@ document.addEventListener(
 
 
 function initMealButtons(){
-
 
 
     const buttons =
@@ -108,14 +135,11 @@ function initMealButtons(){
 
 
 
-                const meal =
+                setMealType(
 
-                    button.dataset.meal;
+                    button.dataset.meal
 
-
-
-                setMealType(meal);
-
+                );
 
 
             }
@@ -159,6 +183,7 @@ function initDrawButtons(){
 
 
 
+
     if(drawButton){
 
 
@@ -178,6 +203,7 @@ function initDrawButtons(){
 
 
     }
+
 
 
 
@@ -235,6 +261,9 @@ function initCoupleMode(){
 
 
 
+    updateCoupleButton(button);
+
+
 
     button.addEventListener(
 
@@ -243,39 +272,17 @@ function initCoupleMode(){
         ()=>{
 
 
-            coupleMode = !coupleMode;
+            userPreference.coupleMode =
+
+                !userPreference.coupleMode;
 
 
 
-            if(coupleMode){
+            saveUserPreference();
 
 
-                button.innerHTML =
 
-                    "❤️ 情侣模式开启";
-
-
-                button.classList.add(
-                    "active"
-                );
-
-
-            }
-
-            else{
-
-
-                button.innerHTML =
-
-                    "❤️ 情侣模式关闭";
-
-
-                button.classList.remove(
-                    "active"
-                );
-
-
-            }
+            updateCoupleButton(button);
 
 
 
@@ -290,14 +297,76 @@ function initCoupleMode(){
 
 
 
+function updateCoupleButton(button){
+
+
+
+    if(
+        userPreference.coupleMode
+    ){
+
+
+        button.innerHTML =
+
+            "❤️ 情侣模式开启";
+
+
+        button.classList.add(
+            "active"
+        );
+
+
+    }
+
+    else{
+
+
+        button.innerHTML =
+
+            "❤️ 情侣模式";
+
+
+        button.classList.remove(
+            "active"
+        );
+
+
+    }
+
+
+}
+
+
+
+
+
 
 
 // ==============================
-// 收藏功能初始化
+// 提供给draw.js调用
 // ==============================
 
 
-function initFavorite(){
+function isCoupleMode(){
+
+
+    return userPreference.coupleMode;
+
+
+}
+
+
+
+
+
+
+
+// ==============================
+// 收藏功能
+// ==============================
+
+
+function initFavoriteButton(){
 
 
 
@@ -324,7 +393,7 @@ function initFavorite(){
         ()=>{
 
 
-            saveCurrentFood();
+            addFavorite();
 
 
         }
@@ -340,12 +409,7 @@ function initFavorite(){
 
 
 
-// ==============================
-// 保存收藏
-// ==============================
-
-
-function saveCurrentFood(){
+function addFavorite(){
 
 
 
@@ -353,18 +417,18 @@ function saveCurrentFood(){
 
 
         alert(
-            "请先抽签选择美食"
+            "请先抽签"
         );
 
 
         return;
 
-
     }
 
 
 
-    const exists =
+
+    const exist =
 
         favoriteList.some(
 
@@ -376,16 +440,15 @@ function saveCurrentFood(){
 
 
 
-    if(exists){
+    if(exist){
 
 
         alert(
-            "已经收藏过啦 ❤️"
+            "已经收藏"
         );
 
 
         return;
-
 
     }
 
@@ -393,20 +456,14 @@ function saveCurrentFood(){
 
 
     favoriteList.push(
+
         lastResult
-    );
-
-
-
-    localStorage.setItem(
-
-        "favorites",
-
-        JSON.stringify(
-            favoriteList
-        )
 
     );
+
+
+
+    saveFavorites();
 
 
 
@@ -421,14 +478,14 @@ function saveCurrentFood(){
     if(button){
 
 
-        button.classList.add(
-            "favorite-active"
-        );
-
-
         button.innerHTML =
 
             "❤️ 已收藏";
+
+
+        button.classList.add(
+            "favorite-active"
+        );
 
 
     }
@@ -443,12 +500,35 @@ function saveCurrentFood(){
 
 
 
+
 // ==============================
-// 加载收藏
+// 收藏存储
 // ==============================
+
+
+function saveFavorites(){
+
+
+
+    localStorage.setItem(
+
+        "favorites",
+
+        JSON.stringify(
+            favoriteList
+        )
+
+    );
+
+
+}
+
+
+
 
 
 function loadFavorites(){
+
 
 
     const data =
@@ -462,28 +542,15 @@ function loadFavorites(){
     if(data){
 
 
-        try{
+        favoriteList =
 
-
-            favoriteList =
-
-                JSON.parse(
-                    data
-                );
-
-
-        }
-
-        catch(error){
-
-
-            favoriteList=[];
-
-
-        }
+            JSON.parse(
+                data
+            );
 
 
     }
+
 
 
 }
@@ -491,13 +558,6 @@ function loadFavorites(){
 
 
 
-
-
-
-// ==============================
-// 获取收藏列表
-// 后续页面使用
-// ==============================
 
 
 function getFavorites(){
@@ -515,15 +575,115 @@ function getFavorites(){
 
 
 // ==============================
-// 情侣模式状态
-// 后续算法调用
+// 用户偏好
 // ==============================
 
 
-function isCoupleMode(){
+function saveUserPreference(){
 
 
-    return coupleMode;
+
+    localStorage.setItem(
+
+        "userPreference",
+
+        JSON.stringify(
+            userPreference
+        )
+
+    );
+
+
+}
+
+
+
+
+
+function loadUserPreference(){
+
+
+
+    const data =
+
+        localStorage.getItem(
+            "userPreference"
+        );
+
+
+
+    if(data){
+
+
+        userPreference =
+
+            JSON.parse(
+                data
+            );
+
+
+    }
+
+
+
+}
+
+
+
+
+
+
+
+
+// ==============================
+// 预算筛选接口
+// 后续UI调用
+// ==============================
+
+
+function setMaxPrice(price){
+
+
+    userPreference.maxPrice = price;
+
+
+    saveUserPreference();
+
+
+}
+
+
+
+
+
+
+
+// ==============================
+// 区域筛选接口
+// ==============================
+
+
+function setDistrict(district){
+
+
+    userPreference.district = district;
+
+
+    saveUserPreference();
+
+
+}
+
+
+
+
+
+
+
+function getPreference(){
+
+
+    return userPreference;
 
 
 }
