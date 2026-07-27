@@ -1,10 +1,18 @@
 /* =====================================================
    Guangzhou Food Draw V2.0
-   Main UI Style
+   Main UI Style V3.0
+
+   Compatible:
+   - index.html
+   - app.js
+   - draw.js
+
 ===================================================== */
 
 
-/* ---------- 全局 ---------- */
+/* =====================================================
+   Global
+===================================================== */
 
 * {
 
@@ -16,13 +24,13 @@
 html,
 body {
 
-    margin: 0;
+    margin:0;
 
-    padding: 0;
+    padding:0;
 
-    width: 100%;
+    width:100%;
 
-    min-height: 100%;
+    min-height:100%;
 
     font-family:
 
@@ -31,13 +39,10 @@ body {
         Arial,
         sans-serif;
 
-    color: #333;
+    color:#333;
 
 }
 
-
-
-/* ---------- 页面背景 ---------- */
 
 
 body {
@@ -55,18 +60,20 @@ body {
 
 
 
-/* ---------- APP容器 ---------- */
+/* =====================================================
+   App Container
+===================================================== */
 
 
 .app {
 
-    width: 100%;
+    width:100%;
 
-    max-width: 480px;
+    max-width:480px;
 
-    min-height: 100vh;
+    min-height:100vh;
 
-    margin: 0 auto;
+    margin:auto;
 
     padding:
 
@@ -80,6 +87,9 @@ body {
 
 
 
+
+
+
 /* =====================================================
    Header
 ===================================================== */
@@ -87,9 +97,9 @@ body {
 
 .header {
 
-    text-align: center;
+    text-align:center;
 
-    padding-top: 15px;
+    padding-top:15px;
 
 }
 
@@ -97,9 +107,7 @@ body {
 
 .logo {
 
-    font-size: 48px;
-
-    margin-bottom: 5px;
+    font-size:48px;
 
 }
 
@@ -107,13 +115,12 @@ body {
 
 .header h1 {
 
-    margin: 0;
 
-    font-size: 32px;
+    margin:0;
 
-    font-weight: 700;
+    font-size:32px;
 
-    color: #8d4b20;
+    color:#8d4b20;
 
 }
 
@@ -121,15 +128,12 @@ body {
 
 .header p {
 
-    margin:
 
-        8px
+    margin:8px 0;
 
-        0;
+    font-size:16px;
 
-    font-size: 16px;
-
-    color: #666;
+    color:#666;
 
 }
 
@@ -137,17 +141,23 @@ body {
 
 .header span {
 
-    display: inline-block;
+
+    display:inline-block;
 
     padding:
 
-        6px
+        6px 15px;
 
-        15px;
+    border-radius:20px;
 
-    border-radius: 20px;
+    background:
 
-    background: rgba(255,255,255,0.65);
+        rgba(
+            255,
+            255,
+            255,
+            0.65
+        );
 
     font-size:14px;
 
@@ -155,61 +165,6 @@ body {
 
 
 
-/* =====================================================
-   Mode Card
-===================================================== */
-
-
-.mode-card {
-
-    margin-top:25px;
-
-    display:flex;
-
-    justify-content:center;
-
-}
-
-
-
-.mode-button {
-
-
-    border:none;
-
-    padding:
-
-        12px
-
-        28px;
-
-
-    border-radius:30px;
-
-
-    background:
-
-        linear-gradient(
-            135deg,
-            #ff7675,
-            #e84393
-        );
-
-
-    color:white;
-
-
-    font-size:16px;
-
-
-    box-shadow:
-
-        0 8px 20px
-
-        rgba(232,67,147,0.25);
-
-
-}
 
 
 
@@ -240,8 +195,6 @@ body {
 
     display:flex;
 
-    justify-content:space-between;
-
     gap:10px;
 
 }
@@ -253,35 +206,19 @@ body {
 
     flex:1;
 
-
     border:none;
-
 
     padding:
 
-        12px
-
-        5px;
-
+        12px 5px;
 
     border-radius:20px;
 
-
     background:white;
-
-
-    font-size:15px;
-
 
     color:#666;
 
-
-    box-shadow:
-
-        0 4px 12px
-
-        rgba(0,0,0,0.08);
-
+    font-size:15px;
 
 }
 
@@ -301,16 +238,144 @@ body {
 
     color:white;
 
-
     font-weight:bold;
-
 
 }
 
 
 
+
+
+
 /* =====================================================
-   Draw Section
+   Filter UI
+===================================================== */
+
+
+.filter-card {
+
+
+    margin-top:25px;
+
+    background:white;
+
+    border-radius:25px;
+
+    padding:20px;
+
+    box-shadow:
+
+        0 10px 25px
+
+        rgba(
+            0,
+            0,
+            0,
+            0.08
+        );
+
+}
+
+
+
+.filter-card h2 {
+
+
+    text-align:center;
+
+    font-size:18px;
+
+}
+
+
+
+.filter-group {
+
+
+    margin-top:20px;
+
+}
+
+
+
+.filter-group label {
+
+
+    display:block;
+
+    margin-bottom:10px;
+
+    font-weight:bold;
+
+}
+
+
+
+.filter-buttons {
+
+
+    display:flex;
+
+    flex-wrap:wrap;
+
+    gap:10px;
+
+}
+
+
+
+.filter-buttons button {
+
+
+    border:none;
+
+    padding:
+
+        8px 15px;
+
+    border-radius:20px;
+
+    background:#f5f5f5;
+
+}
+
+
+
+.filter-buttons button.active {
+
+
+    background:#ff7675;
+
+    color:white;
+
+}
+
+
+
+#districtSelect {
+
+
+    width:100%;
+
+    padding:12px;
+
+    border-radius:15px;
+
+    border:
+
+        1px solid #ddd;
+
+    background:white;
+
+}
+
+
+
+
+
+
+/* =====================================================
+   Draw Wheel
 ===================================================== */
 
 
@@ -319,9 +384,7 @@ body {
 
     margin-top:35px;
 
-
     text-align:center;
-
 
 }
 
@@ -334,7 +397,6 @@ body {
 
     justify-content:center;
 
-
 }
 
 
@@ -345,7 +407,6 @@ body {
     width:260px;
 
     height:260px;
-
 
     border-radius:50%;
 
@@ -371,20 +432,12 @@ body {
 
     display:flex;
 
-    align-items:center;
-
     justify-content:center;
+
+    align-items:center;
 
 
     padding:15px;
-
-
-    box-shadow:
-
-        0 15px 35px
-
-        rgba(0,0,0,0.18);
-
 
 }
 
@@ -397,7 +450,6 @@ body {
 
     height:150px;
 
-
     border-radius:50%;
 
 
@@ -406,21 +458,18 @@ body {
 
     display:flex;
 
-    align-items:center;
-
     justify-content:center;
+
+    align-items:center;
 
 
     font-size:22px;
 
     font-weight:bold;
 
-
     color:#e17055;
 
-
 }
-
 
 
 
@@ -429,15 +478,11 @@ body {
 
     margin-top:30px;
 
-
     border:none;
-
 
     padding:
 
-        16px
-
-        55px;
+        16px 55px;
 
 
     border-radius:40px;
@@ -458,33 +503,26 @@ body {
 
     color:white;
 
-
     font-size:20px;
 
-
     font-weight:bold;
-
-
-    box-shadow:
-
-        0 10px 25px
-
-        rgba(214,48,49,0.3);
-
 
 }
 
 
 
+
+
+
 /* =====================================================
-   Result Card
+   Enhanced Result Card
 ===================================================== */
 
 
 .result-card {
 
 
-    margin-top:35px;
+    margin-top:25px;
 
 
     background:white;
@@ -498,94 +536,170 @@ body {
 
     box-shadow:
 
-        0 10px 30px
 
-        rgba(0,0,0,0.1);
+        0 15px 35px
 
-
-}
-
-
-
-.result-header {
-
-
-    font-size:16px;
-
-    color:#888;
-
+        rgba(
+            0,
+            0,
+            0,
+            0.1
+        );
 
 }
 
 
 
-.result-card h2 {
+.result-title {
+
+
+    text-align:center;
+
+    font-size:18px;
+
+    color:#ff7675;
+
+    font-weight:bold;
+
+}
+
+
+
+.result-card h1 {
 
 
     text-align:center;
 
 
-    font-size:28px;
-
-
     margin:
 
-        20px
+        20px 0;
 
-        0;
 
+    font-size:28px;
 
     color:#d35400;
-
 
 }
 
 
 
 
-.tags {
+
+.result-info {
+
+
+    display:flex;
+
+    justify-content:center;
+
+    flex-wrap:wrap;
+
+    gap:15px;
+
+}
+
+
+
+.info-item {
+
+
+    background:#f8f8f8;
+
+    padding:
+
+        8px 15px;
+
+
+    border-radius:20px;
+
+}
+
+
+
+
+
+
+/* =====================================================
+   Score
+===================================================== */
+
+
+.score-box {
+
+
+    margin-top:20px;
 
 
     display:flex;
 
 
-    justify-content:center;
+    justify-content:space-around;
 
 
-    gap:8px;
+    background:#fff5f5;
 
 
-    flex-wrap:wrap;
-
-
-}
-
-
-
-.tags span {
-
-
-    background:#fff3e0;
-
-
-    padding:
-
-        6px
-
-        12px;
+    padding:15px;
 
 
     border-radius:15px;
 
 
-    font-size:13px;
+}
+
+
+
+.score-box strong {
+
+
+    margin-left:5px;
+
+    color:#e17055;
+
+}
+
+
+
+
+
+
+/* =====================================================
+   Business
+===================================================== */
+
+
+.business-box {
+
+
+    margin-top:15px;
+
+
+    padding:12px;
+
+
+    background:#f7f7f7;
+
+
+    border-radius:12px;
 
 
 }
 
 
 
+
+
+
+/* =====================================================
+   Description
+===================================================== */
+
+
 .result-card p {
+
+
+    margin-top:15px;
 
 
     text-align:center;
@@ -601,17 +715,20 @@ body {
 
 
 
-/* ---------- 操作按钮 ---------- */
 
 
-.result-actions {
+
+/* =====================================================
+   Buttons
+===================================================== */
+
+
+.result-buttons {
 
 
     display:flex;
 
-
-    gap:15px;
-
+    gap:10px;
 
     margin-top:20px;
 
@@ -620,18 +737,16 @@ body {
 
 
 
-.result-actions button {
+.result-buttons button {
 
 
     flex:1;
 
 
+    padding:12px;
+
+
     border:none;
-
-
-    padding:
-
-        12px;
 
 
     border-radius:20px;
@@ -640,10 +755,37 @@ body {
     background:#f5f5f5;
 
 
-    font-size:15px;
+    font-size:14px;
 
 
 }
+
+
+
+.result-buttons button:hover {
+
+
+    background:#ffe0e0;
+
+
+}
+
+
+
+
+
+.favorite-active {
+
+
+    background:#ff7675 !important;
+
+    color:white;
+
+}
+
+
+
+
 
 
 
@@ -671,8 +813,11 @@ footer {
 
 
 
+
+
+
 /* =====================================================
-   Mobile Adaptation
+   Mobile
 ===================================================== */
 
 
@@ -689,6 +834,7 @@ footer {
     }
 
 
+
     .wheel-center {
 
 
@@ -701,6 +847,7 @@ footer {
 
 
     .header h1 {
+
 
         font-size:26px;
 

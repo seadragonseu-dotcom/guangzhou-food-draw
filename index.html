@@ -81,21 +81,188 @@
     <!-- 模式选择 -->
 
 
-    <section class="mode-card">
+    <!-- ==========================
+     筛选条件
+========================== -->
 
 
-        <button
-                id="coupleMode"
-                class="mode-button">
+<section class="filter-card">
 
 
-            ❤️ 情侣模式开启
+    <h2>
+        🎯 推荐偏好
+    </h2>
 
 
-        </button>
+    <!-- 预算 -->
+
+    <div class="filter-group">
 
 
-    </section>
+        <label>
+            💰 预算
+        </label>
+
+
+        <div class="filter-buttons">
+
+
+            <button
+            class="price-btn"
+            data-price="50">
+
+                ¥50以内
+
+            </button>
+
+
+            <button
+            class="price-btn"
+            data-price="100">
+
+                ¥100以内
+
+            </button>
+
+
+            <button
+            class="price-btn"
+            data-price="200">
+
+                ¥200以内
+
+            </button>
+
+
+            <button
+            class="price-btn active"
+            data-price="0">
+
+                不限
+
+            </button>
+
+
+        </div>
+
+
+    </div>
+
+
+
+
+
+    <!-- 区域 -->
+
+
+    <div class="filter-group">
+
+
+        <label>
+            📍 区域
+        </label>
+
+
+        <select id="districtSelect">
+
+
+            <option value="">
+                不限区域
+            </option>
+
+
+            <option value="天河">
+                天河
+            </option>
+
+
+            <option value="越秀">
+                越秀
+            </option>
+
+
+            <option value="海珠">
+                海珠
+            </option>
+
+
+            <option value="荔湾">
+                荔湾
+            </option>
+
+
+            <option value="番禺">
+                番禺
+            </option>
+
+
+        </select>
+
+
+    </div>
+
+
+
+
+
+    <!-- 标签 -->
+
+
+    <div class="filter-group">
+
+
+        <label>
+            🍜 类型
+        </label>
+
+
+        <div class="filter-buttons">
+
+
+            <button
+            class="tag-btn"
+            data-tag="粤菜">
+
+                粤菜
+
+            </button>
+
+
+            <button
+            class="tag-btn"
+            data-tag="火锅">
+
+                火锅
+
+            </button>
+
+
+            <button
+            class="tag-btn"
+            data-tag="日料">
+
+                日料
+
+            </button>
+
+
+            <button
+            class="tag-btn"
+            data-tag="烧烤">
+
+                烧烤
+
+            </button>
+
+
+        </div>
+
+
+    </div>
+
+
+
+</section>
 
 
 
@@ -214,106 +381,161 @@
     <!-- 推荐结果 -->
 
 
-    <section class="result-card">
+<!-- ==========================
+推荐结果卡片
+========================== -->
 
 
-        <div class="result-header">
+<section class="result-card">
 
 
-            <span>
+    <div class="result-title">
 
-                🎯 今日推荐
+        ❤️ 今日推荐
 
-            </span>
-
-
-        </div>
-
-
-
-
-        <h2 id="foodName">
-
-            等待抽签
-
-        </h2>
+    </div>
 
 
 
+    <h1 id="foodName">
 
-        <div class="tags">
+        等待抽签
 
+    </h1>
+
+
+
+    <div class="result-info">
+
+
+        <div class="info-item">
+
+            🍜
 
             <span id="foodType">
 
-                菜系
+            菜系
 
             </span>
 
+        </div>
+
+
+
+        <div class="info-item">
+
+            📍
 
             <span id="foodDistrict">
 
-                区域
+            区域
 
             </span>
 
+        </div>
 
+
+
+        <div class="info-item">
+
+            💰
 
             <span id="foodPrice">
 
-                人均
+            价格
 
             </span>
 
+        </div>
 
+
+    </div>
+
+
+
+
+    <div class="score-box">
+
+
+        <div>
+
+            ⭐评分
+
+            <strong id="foodRating">
+
+            -
+
+            </strong>
 
         </div>
 
 
 
+        <div>
 
+            ❤️情侣指数
 
-        <p id="foodDescription">
+            <strong id="foodCoupleScore">
 
+            -
 
-            点击开始抽签，让好运决定今天吃什么。
-
-
-        </p>
-
-
-
-
-
-        <div class="result-actions">
-
-
-            <button
-                    id="againButton">
-
-
-                🔄 再抽一次
-
-
-            </button>
-
-
-
-            <button
-                    id="favoriteButton">
-
-
-                ❤️ 收藏
-
-
-            </button>
-
+            </strong>
 
         </div>
 
 
+    </div>
 
-    </section>
+
+
+
+
+    <div class="business-box">
+
+
+        🕒营业时间：
+
+        <span id="foodHours">
+
+        -
+
+        </span>
+
+
+    </div>
+
+
+
+
+
+    <p id="foodDescription">
+
+
+        推荐理由
+
+
+    </p>
+
+
+
+
+
+    <div class="result-buttons">
+
+    <button id="mapButton">
+    📍 查看地图
+    </button>
+
+
+    <button id="navigationButton">
+    🚗 导航前往
+    </button>
+
+
+</div>
+
+
+</section>
 
 
 
